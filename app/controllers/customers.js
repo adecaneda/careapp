@@ -25,70 +25,67 @@ exports.list = function(req, res) {
 /**
  * Create a customer
  */
-exports.create = function(req, res) {
+exports.create = function(req, res, next) {
     var customer = new Customer(req.body);
 
-    customer.save(function(err) {
-        if (err) {
-            return res.status(400).send({
-                message: getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(customer);
-        }
-    });
+    // Save the data
+    return doSaveCustomer(req, res, customer, next);
 };
 
 /**
  * Show the current customer in the request
  */
 exports.read = function(req, res) {
-    res.jsonp(req.customer);
+    res.jsonp(req.entity);
 };
 
 /**
  * Update the current customer in the request
  */
-exports.update = function(req, res) {
+exports.update = function(req, res, next) {
     // Modify the current customer with the data in the request
-    var customer = _.extend(req.customer, req.body);
+    var customer = _.extend(req.entity, req.body);
 
     // Save the data
-    return doSaveCustomer(req, res, customer);
+    return doSaveCustomer(req, res, customer, next);
 };
 
 /**
  * Adds a new service to the customer
  */
-exports.addService = function(req, res) {
-    var customer = req.customer;
+exports.addService = function(req, res, next) {
+    var customer = req.entity;
 
     // Call the model
     customer.addService(req.body.serviceId);
 
-    return doSaveCustomer(req, res, customer);
+    // Save the data
+    return doSaveCustomer(req, res, customer, next);
 };
 
 /**
  * Removes an existing service from the customer
  */
-exports.removeService = function(req, res) {
-    var customer = req.customer;
+exports.removeService = function(req, res, next) {
+    var customer = req.entity;
 
     // Call the model
     customer.removeService(req.body.serviceId);
 
-    return doSaveCustomer(req, res, customer);
+    // Save the data
+    return doSaveCustomer(req, res, customer, next);
 };
 
 /**
  * Customer middleware
+ * Reads a customer entity by its id and stores it in the request as req.entity
  */
 exports.customerByID = function(req, res, next, id) {
     Customer.findById(id, function(err, customer) {
         if (err) return next(err);
         if (!customer) return next(new Error('Failed to load customer ' + id));
-        req.customer = customer;
+        req.entity = customer;
+        req.entitymodel = 'Customer';
         next();
     });
 };
@@ -98,16 +95,27 @@ exports.customerByID = function(req, res, next, id) {
 // Custom methods
 
 /**
- * Short cut
+ * Common save stuff
+ *
+ * @param req
+ * @param res
+ * @param customer
+ * @param next
  */
-var doSaveCustomer = function(req, res, customer) {
+var doSaveCustomer = function(req, res, customer, next) {
     customer.save(function(err) {
         if (err) {
             return res.status(400).send({
                 message: getErrorMessage(err)
             });
         } else {
-            res.jsonp(customer);
+            res.entity = customer;
+            res.entitymodel = 'Customer';
+            if (next) {
+                next();
+            } else {
+                res.jsonp(customer);
+            }
         }
     });
 };

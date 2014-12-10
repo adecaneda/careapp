@@ -5,27 +5,30 @@
 require('../models/customer');
 
 var customers = require('../controllers/customers');
+var changelog = require('../controllers/changelog');
 
 module.exports = function(router) {
     router.route('/customers')
         // gets a list of all customers
         .get(customers.list)
         // creates a new customer
-        .post(customers.create);
+        .post(changelog.before, customers.create, changelog.after);
 
     router.route('/customers/:customerId')
         // gets one customer by id
         .get(customers.read)
         // updates one customer by id
-        .put(customers.update);
+        .put(changelog.before, customers.update, changelog.after);
 
     // adds a service to the customer
     router.route('/customers/:customerId/addService')
-        .post(customers.addService);
+        // param: serviceId
+        .post(changelog.before, customers.addService, changelog.after);
 
     // removes a service from the customer
     router.route('/customers/:customerId/removeService')
-        .post(customers.removeService);
+        // param: serviceId
+        .post(changelog.before, customers.removeService, changelog.after);
 
 
     // Finish by binding the client middleware

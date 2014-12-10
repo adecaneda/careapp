@@ -12,6 +12,11 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+
+// Put this somewhere else
+require('./app/models/changelog');
+
+
 // --------------------------------------------------------
 // ROUTES CONFIGURATION
 // Get an instance of the express Router
