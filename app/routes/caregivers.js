@@ -5,19 +5,20 @@
 require('../models/caregiver');
 
 var caregivers = require('../controllers/caregivers');
+var changelog = require('../controllers/changelog');
 
 module.exports = function(router) {
     router.route('/caregivers')
         // gets a list of all caregivers
         .get(caregivers.list)
         // creates a new caregiver
-        .post(caregivers.create);
+        .post(changelog.before, caregivers.create, changelog.after);
 
     router.route('/caregivers/:caregiverId')
         // gets one caregiver by id
         .get(caregivers.read)
         // updates one caregiver by id
-        .put(caregivers.update);
+        .put(changelog.before, caregivers.update, changelog.after);
 
 
     // Finish by binding the client middleware
