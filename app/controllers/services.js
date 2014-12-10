@@ -9,6 +9,35 @@ var mongoose = require('mongoose');
 var Service = mongoose.model('Service');
 var _ = require('lodash');
 
+// ----------------------------------------
+// Custom methods
+
+/**
+ * Common save stuff
+ *
+ * @param req
+ * @param res
+ * @param entity
+ * @param next
+ */
+var doSaveEntity = function(req, res, entity, next) {
+    entity.save(function(err) {
+        if (err) {
+            return res.status(400).send({
+                message: getErrorMessage(err)
+            });
+        } else {
+            res.entity = entity;
+            res.entitymodel = 'Service';
+            if (next) {
+                next();
+            } else {
+                res.jsonp(entity);
+            }
+        }
+    });
+};
+
 /**
  * Get the error message from error object
  */
@@ -69,51 +98,40 @@ exports.list = function(req, res) {
 /**
  * Create a service
  */
-exports.create = function(req, res) {
+exports.create = function(req, res, next) {
     var service = new Service(req.body);
 
-    service.save(function(err) {
-        if (err) {
-            return res.status(400).send({
-                message: getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(service);
-        }
-    });
+    // Save the data
+    return doSaveEntity(req, res, service, next);
 };
 
 /**
  * Show the current service in the request
  */
 exports.read = function(req, res) {
-    res.jsonp(req.service);
+    res.jsonp(req.entity);
 };
 
 /**
  * Update the current service in the request
  */
-exports.update = function(req, res) {
-    var service = _.extend(req.service, req.body);
-    service.save(function(err) {
-        if (err) {
-            return res.status(400).send({
-                message: getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(service);
-        }
-    });
+exports.update = function(req, res, next) {
+    var service = _.extend(req.entity, req.body);
+
+    // Save the data
+    return doSaveEntity(req, res, service, next);
 };
 
 /**
- * Service middleware
+ * Service middleware.
+ * Reads a service entity by its id and stores it in the request as req.entity
  */
 exports.serviceByID = function(req, res, next, id) {
     Service.findById(id, function(err, service) {
             if (err) return next(err);
             if (!service) return next(new Error('Failed to load service ' + id));
-            req.service = service;
+            req.entity = service;
+            req.entitymodel = 'Service';
             next();
         });
 };
