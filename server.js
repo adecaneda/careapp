@@ -28,6 +28,8 @@ require('./app/routes/caregivers')(router);
 require('./app/routes/services')(router);
 // Routes for customers
 require('./app/routes/customers')(router);
+// Routes for changelog
+require('./app/routes/changelog')(router);
 
 // Register the router (prefixed with /api)
 app.use('/api', router);

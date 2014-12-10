@@ -11,7 +11,37 @@ var _ = require('lodash');
 
 var changelog = null;
 
+
 /**
+ * List all changes
+ */
+exports.list = function(req, res) {
+
+    // Prepare query object
+    var query = Changelog.find();
+
+    // Apply filters (if any)
+    // The only filter allowed is by 'model' or by 'eid'
+    if (req.query.model) {
+        query.where({model: req.query.model});
+    }
+    if (req.query.eid) {
+        query.where({eid: req.query.eid});
+    }
+
+    // Execute query
+    query.exec(function(err, changes) {
+        if (err) {
+            return res.status(400).send({
+                message: 'Error in changelog'
+            });
+        } else {
+            res.jsonp(changes);
+        }
+    });
+
+};
+
 
 /**
  * Hook pre modification
