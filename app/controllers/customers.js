@@ -51,6 +51,25 @@ exports.update = function(req, res, next) {
 };
 
 /**
+ * Delete a customer
+ */
+exports.delete = function(req, res, next) {
+    var customer = req.entity;
+
+    customer.remove(function(err) {
+        if (err) {
+            return res.status(400).send({
+                message: getErrorMessage(err)
+            });
+        } else {
+            res.entity = customer;
+            res.entitymodel = 'Customer';
+            next();
+        }
+    });
+};
+
+/**
  * Adds a new service to the customer
  */
 exports.addService = function(req, res, next) {

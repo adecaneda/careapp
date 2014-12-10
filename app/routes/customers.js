@@ -18,7 +18,9 @@ module.exports = function(router) {
         // gets one customer by id
         .get(customers.read)
         // updates one customer by id
-        .put(changelog.before, customers.update, changelog.after);
+        .put(changelog.before, customers.update, changelog.after)
+        // deletes one customer by id
+        .delete(changelog.before, customers.delete, changelog.after);
 
     // adds a service to the customer
     router.route('/customers/:customerId/addService')
