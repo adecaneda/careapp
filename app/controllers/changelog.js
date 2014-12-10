@@ -64,7 +64,13 @@ exports.after = function(req, res) {
             // new instance to avoid overriding the previous change
             changelog = new Changelog();
         }
-        changelog.setAfter(res.entitymodel, res.entity._id, res.entity);
+
+        // if request method is 'delete' ignore the 'after' entity
+        if (req.method == 'DELETE') {
+            changelog.setAfter(res.entitymodel, res.entity._id, null);
+        } else {
+            changelog.setAfter(res.entitymodel, res.entity._id, res.entity);
+        }
 
         changelog.flush(function(save) {
             if (save) {
