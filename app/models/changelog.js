@@ -19,10 +19,10 @@ var changelogSchema = new Schema({
     },
 
     // Original state before the change
-    state_from: [],
+    state_from: {},
 
     // Final state after the change
-    state_to: [],
+    state_to: {},
 
     // Change date
     date: {
@@ -166,7 +166,7 @@ changelogSchema.methods = {
                 }
             });
         }
-        
+
         // if both objects are empty then there was no change actually
         var areEqual = _.isEmpty(_before) && _.isEmpty(_after);
 
