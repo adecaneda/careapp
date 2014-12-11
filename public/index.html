@@ -108,6 +108,73 @@
     </div>
 </div>
 
+<div ng-controller="changesController" class="container col-sm-3">
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3 class="panel-title text-center"><strong>CHANGELOG</strong></h3>
+        </div>
+    </div>
+
+    <!-- Form to create/edit customers -->
+    <div class="container panel panel-default">
+        <div class="panel-body">
+            <p>{{entity.change.model}} : {{entity.change.eid}}</p>
+            <p>Changed @ {{entity.change.date | date}}</p>
+            <div ng-repeat="(key, value) in entity.change.state_from">
+                <p>Field {{key}} changed from <strong>{{value}}</strong> to <strong>{{entity.change.state_to[key]}}</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container panel panel-default">
+        <div class="panel-body col-sm-10 col-sm-offset-1">
+            <form>
+                <div class="form-group row">
+                    <label for="model" class="col-sm-4">Model</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control input-sm" id="model"
+                               placeholder="Type model name" ng-model="formData.change.model">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="eid" class="col-sm-4">EID</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control input-sm" id="eid"
+                               placeholder="Type entity id" ng-model="formData.change.eid">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <button type="submit" class="col-sm-4 btn btn-primary btn-sm"
+                            ng-click="selectChange()">Clear</button>
+                    <button type="submit" class="col-sm-5 btn btn-success btn-sm pull-right"
+                            ng-click="refreshChanges()">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Customer list -->
+    <div class="container panel panel-default">
+        <div class="panel-body">
+            <div class="form-group row" ng-repeat="change in entities.changes">
+                <div class="col-sm-7">
+                    <!-- LOOP OVER THE ITEMS IN $scope.customers -->
+                    <label>
+                        {{ change.model + ':' + change.eid }}
+                    </label>
+                </div>
+                <div class="col-sm-1">
+                    <form>
+                        <button type="submit" class="btn btn-primary btn-sm"
+                                ng-click="selectChange($index)">Select</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

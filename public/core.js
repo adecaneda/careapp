@@ -72,3 +72,45 @@ function customersController($scope, $http) {
     };
 
 }
+
+function changesController($scope, $http) {
+
+    // Initialize things
+    $scope.formData = {
+        change: {}
+    };
+    $scope.entities = {
+        changes: {}
+    };
+    $scope.entity = {
+        change: {}
+    };
+
+    // when landing on the page, get all changes and show them
+    $scope.refreshChanges = function() {
+        $http.get('/api/changelog', {params: $scope.formData.change})
+            .success(function(data) {
+                $scope.entities.changes = data;
+            })
+            .error(function(data) {
+                console.log('Error: ' + data.message);
+            });
+    };
+    $scope.refreshChanges();
+
+    // selects/unselects a change
+    $scope.selectChange = function(idx) {
+        if (idx == undefined) {
+            $scope.formData.change = {};
+
+        } else {
+            $scope.entity.change = $scope.entities.changes[idx];
+            $scope.formData.change = {
+                model: $scope.entity.change.model,
+                eid: $scope.entity.change.eid
+            }
+        }
+
+    };
+
+}
