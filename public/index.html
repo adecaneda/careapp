@@ -1,0 +1,113 @@
+<!-- index.html -->
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="careappFront">
+<head>
+    <!-- META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+    <title>Careapp Front</title>
+
+    <!-- SCROLLS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+    <style>
+        html                    { overflow-y:scroll; }
+        body                    { padding-top:50px; }
+    </style>
+
+    <!-- SPELLS -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+    <script src="core.js"></script>
+
+</head>
+<!-- SET THE CONTROLLER AND GET ALL CUSTOMERS -->
+<body ng-controller="mainController">
+<div class="container col-sm-3">
+
+    <div id="customers" class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3 class="panel-title text-center"><strong>CUSTOMERS</strong></h3>
+        </div>
+    </div>
+
+    <!-- Form to create/edit customers -->
+    <div id="todo-form" class="container panel panel-default">
+        <div class="panel-body col-sm-10 col-sm-offset-1">
+            <form>
+                <div class="form-group row">
+                    <p class="col-sm-12">id : {{formData.customer._id}}</p>
+                </div>
+                <div class="form-group row">
+                    <label for="name" class="col-sm-4">Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control input-sm" id="name"
+                               placeholder="Type name" ng-model="formData.customer.name">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="surname" class="col-sm-4">Surname</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control input-sm" id="surname"
+                               placeholder="Type surname" ng-model="formData.customer.surname">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="gender" class="col-sm-4">Gender</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control input-sm" id="gender"
+                               placeholder="Type gender (male/female)" ng-model="formData.customer.gender">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="birth_date" class="col-sm-4">Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control input-sm" id="birth_date"
+                               placeholder="Type birth date" ng-model="formData.customer.birth_date">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <button type="submit" class="col-sm-4 btn btn-primary btn-sm"
+                            ng-click="selectCustomer()">Unselect</button>
+                    <button type="submit" class="col-sm-5 btn btn-success btn-sm pull-right"
+                            ng-click="saveCustomer()">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Customer list -->
+    <div class="container panel panel-default">
+        <div class="panel-body">
+            <div class="form-group row" ng-repeat="customer in entities.customers">
+                <div class="col-sm-7">
+                    <!-- LOOP OVER THE ITEMS IN $scope.customers -->
+                    <label>
+                        {{ customer.name + ' ' + customer.surname }}
+                    </label>
+                </div>
+                <div class="col-sm-2">
+                    <form>
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                ng-click="deleteCustomer($index)">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </form>
+                </div>
+                <div class="col-sm-1">
+                    <form>
+                    <button type="submit" class="btn btn-primary btn-sm"
+                           ng-click="selectCustomer($index)">Select</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
