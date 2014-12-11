@@ -3,7 +3,7 @@
  */
 var careappFront = angular.module('careappFront', []);
 
-function mainController($scope, $http) {
+function customersController($scope, $http) {
 
     // Initialize things
     $scope.formData = {
